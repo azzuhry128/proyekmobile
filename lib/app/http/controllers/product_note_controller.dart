@@ -10,7 +10,7 @@ class ProductNoteController extends Controller {
   }
 
   Future<Response> createProductNoteController(Request request) async {
-    final prodId = request.input('prodId');
+    final prodId = request.input('prodID');
     final noteDate = request.input('noteDate');
     final noteText = request.input('noteText');
 
@@ -23,11 +23,22 @@ class ProductNoteController extends Controller {
       'note_text': noteText
     });
 
-    return Response.json({'message': result});
+    return Response.json({
+      'message': result,
+      'create product note': {
+        'note id': randomID,
+        'product id': prodId,
+        'note date': noteDate,
+        'note text': noteText
+      },
+      'data': result
+      });
   }
 
   Future<Response> updateProductNoteController(Request request, noteID) async {
     final Map<String, dynamic> updateData = {};
+
+    final converted = noteID.toString();
 
     final inputFields = [
       ['prod_id', request.input('prodID')],
@@ -46,14 +57,24 @@ class ProductNoteController extends Controller {
 
     final result = await Productnote()
         .query()
-        .where('prod_id', '=', noteID)
+        .where('prod_id', '=', converted)
         .update(updateData);
-    return Response.json({'message': result});
+    return Response.json({
+      'message': "success updating product note",
+      "updated product note": {
+        'note id': noteID,
+        'product id': request.input('prodID'),
+        'note date': request.input('noteDate'),
+        'note text': request.input('noteText')
+      },
+      "data": result
+      });
   }
 
   Future<Response> deleteProductNoteController(Request request, noteID) async {
+    final converted = noteID.toString();
     final result =
-        await Productnote().query().where('prod_id', '=', noteID).delete();
-    return Response.json({'message': result});
+        await Productnote().query().where('prod_id', '=', converted).delete();
+    return Response.json({'message': "product note deleted", "product note id": noteID, "data": result});
   }
 }

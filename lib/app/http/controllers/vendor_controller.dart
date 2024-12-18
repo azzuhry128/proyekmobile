@@ -11,22 +11,42 @@ class VendorController extends Controller {
 
   Future<Response> createVendorController(Request request) async {
     final vendorName = request.input('vendorName');
-    final vendorDesc = request.input('vendorDesc');
-    final vendorImage = request.input('vendorImage');
+    final vendorAddress = request.input('vendorAddress');
+    final vendorKota = request.input('vendorKota');
+    final vendorState = request.input('vendorState');
+    final vendZip = request.input('vendZip');
+    final vendCountry = request.input('vendCountry');
 
     final randomID = (Random().nextInt(90000) + 10000).toString();
 
     final result = await Vendor().query().insert({
       'vend_id': randomID,
       'vend_name': vendorName,
-      'vend_desc': vendorDesc,
-      'vend_image': vendorImage,
+      'vend_address': vendorAddress,
+      'vend_kota': vendorKota,
+      'vend_state': vendorState,
+      'vend_zip': vendZip,
+      'vend_country': vendCountry
     });
-    return Response.json({'message': result});
+    return Response.json({
+      'message': "success creating vendor",
+      "created vendor": {
+        "vendor id": randomID,
+        "vendor name": request.input('vendorName'),
+        "vendor address": request.input('vendorAddress'),
+        "vendor kota": request.input('vendorKota'),
+        "vendor state": request.input('vendorState'),
+        "vendor zip": request.input('vendZip'),
+        "vendor country": request.input('vendCountry'),
+      },
+      "data": result
+    });
   }
 
   Future<Response> updateVendorController(Request request, vendID) async {
     final Map<String, dynamic> updateData = {};
+
+    final converted = vendID.toString();
 
     final inputFields = [
       ['vend_name', request.input('vendName')],
@@ -48,14 +68,23 @@ class VendorController extends Controller {
 
     final result = await Vendor()
         .query()
-        .where('vendor_id', '=', vendID)
+        .where('vend_id', '=', converted)
         .update(updateData);
-    return Response.json({'message': result});
+    return Response.json(
+        {'message': "success updating vendor", "updated vendor": {
+          "vendor id": converted,
+          "vendor name": request.input('vendName'),
+          "vendor address": request.input('vendAddress'),
+          "vendor kota": request.input('vendKota'),
+        }, "data": result});
   }
 
   Future<Response> deleteVendorController(Request request, vendID) async {
+    final converted = vendID.toString();
+
     final result =
-        await Vendor().query().where('vendor_id', '=', vendID).delete();
-    return Response.json({'message': result});
+        await Vendor().query().where('vend_id', '=', converted).delete();
+    return Response.json(
+        {'message': "vendor deleted", "vendor id": vendID, "data": result});
   }
 }

@@ -11,11 +11,11 @@ class OrderItemController extends Controller {
 
   Future<Response> createOrderItemController(Request request) async {
     final orderNum = request.input('orderNum');
-    final prodId = request.input('prodId');
+    final prodId = request.input('prodID');
     final quantity = request.input('quantity');
     final size = request.input('size');
 
-    final randomID = (Random().nextInt(90000000000) + 10000000000).toString();
+    final randomID = (Random().nextInt(4000000000) + 4000000000).toString();
 
     final result = await Orderitem().query().insert({
       'order_item': randomID,
@@ -24,7 +24,8 @@ class OrderItemController extends Controller {
       'quantity': quantity,
       'size': size
     });
-    return Response.json({'message': result});
+    return Response.json(
+        {'message': "success creating order item", "data": result});
   }
 
   Future<Response> updateorderItemController(Request request, orderItem) async {
@@ -32,7 +33,7 @@ class OrderItemController extends Controller {
 
     final inputFields = [
       ['order_num', request.input('orderNum')],
-      ['prod_id', request.input('prodId')],
+      ['prod_id', request.input('prodID')],
       ['quantity', request.input('quantity')],
       ['size', request.input('size')],
     ];
@@ -46,12 +47,27 @@ class OrderItemController extends Controller {
       }
     }
 
-    final result = await Orderitem().query().where('order_item', '=', orderItem).update(updateData);
-    return Response.json({'message': result});
+    final result = await Orderitem()
+        .query()
+        .where('order_item', '=', orderItem)
+        .update(updateData);
+    return Response.json({
+      'message': "success updating order item",
+      "updatedData": {
+        "quantity": request.input('quantity'),
+        "size": request.input('size')
+      },
+      "data": result
+    });
   }
 
   Future<Response> deleteOrderItemController(Request request, orderItem) async {
-    final result = await Orderitem().query().where('order_item', '=', orderItem).delete();
-    return Response.json({'message': result});
+    final result =
+        await Orderitem().query().where('order_item', '=', orderItem).delete();
+    return Response.json({
+      'message': "order item deleted",
+      "order item id": orderItem,
+      "data": result
+    });
   }
 }

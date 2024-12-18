@@ -1,4 +1,9 @@
 import 'package:proyekmobile/app/http/controllers/customer_controller.dart';
+import 'package:proyekmobile/app/http/controllers/order_controller.dart';
+import 'package:proyekmobile/app/http/controllers/order_item_controller.dart';
+import 'package:proyekmobile/app/http/controllers/product_controller.dart';
+import 'package:proyekmobile/app/http/controllers/product_note_controller.dart';
+import 'package:proyekmobile/app/http/controllers/vendor_controller.dart';
 import 'package:vania/vania.dart';
 import 'package:proyekmobile/app/http/controllers/home_controller.dart';
 import 'package:proyekmobile/app/http/middleware/authenticate.dart';
@@ -37,88 +42,40 @@ class ApiRoute implements Route {
     Router.delete("/customer/delete/{id}", CustomerController().deleteCustomer);
 
     // orders
-    Router.get("/orders", () {
-      return Response.html('orders');
-    });
-
-    Router.post("/orders", () {
-      return Response.html('created orders');
-    });
-
-    Router.put("/orders/{order_num}", () {
-      return Response.html('updated orders');
-    });
-
-    Router.delete("/orders/{order_num}", () {
-      return Response.html('deleted orders');
-    });
+    Router.get("/orders", OrderController().getOrderController);
+    Router.post("/orders/create", OrderController().createOrderController);
+    Router.put(
+        "/orders/update/{orderNum}", OrderController().updateOrderController);
+    Router.delete(
+        "/orders/delete/{orderNum}", OrderController().deleteOrderController);
 
     // orderitems
-    Router.get("/orderitems", () {
-      return Response.html('orderitems');
-    });
-
-    Router.post("/orderitems", () {
-      return Response.html('created orderitems');
-    });
-
-    Router.put("/orderitems/{order_item}", () {
-      return Response.html('updated orders');
-    });
-
-    Router.delete("/orderitems/{order_item}", () {
-      return Response.html('deleted orderitems');
-    });
+    Router.get("/orderitems", OrderItemController().getOrderItemController);
+    Router.post("/orderitems/create", OrderItemController().createOrderItemController);
+    Router.put("/orderitems/update/{orderItem}",
+        OrderItemController().updateorderItemController);
+    Router.delete("/orderitems/delete/{orderItem}",
+        OrderItemController().deleteOrderItemController);
 
     // products
-    Router.get("/products", () {
-      return Response.html('products');
-    });
-
-    Router.post("/products", () {
-      return Response.html('created products');
-    });
-
-    Router.put("/products/{prod_id}", () {
-      return Response.html('updated orders');
-    });
-
-    Router.delete("/products/{prod_id}", () {
-      return Response.html('deleted products');
-    });
+    Router.get("/products", ProductController().getProductController);
+    Router.post("/products/create/{vendID}", ProductController().createProductController);
+    Router.put("/products/update/{prodID}", ProductController().updateProductController);
+    Router.delete("/products/delete/{prodID}", ProductController().deleteProductController);
 
     // productnotes
-    Router.get("/productnotes", () {
-      return Response.html('productnotes');
-    });
+    Router.get("/productnotes", ProductNoteController().getProductNoteController);
 
-    Router.post("/productnotes", () {
-      return Response.html('created productnotes');
-    });
+    Router.post("/productnotes/create", ProductNoteController().createProductNoteController);
 
-    Router.put("/productnotes/{note_id}", () {
-      return Response.html('updated productnotes');
-    });
+    Router.put("/productnotes/update/{noteID}", ProductNoteController().updateProductNoteController);
 
-    Router.delete("/productnotes/{note_id}", () {
-      return Response.html('deleted productnotes');
-    });
+    Router.delete("/productnotes/delete/{noteID}", ProductNoteController().deleteProductNoteController);
 
     // vendors
-    Router.get("/vendor", () {
-      return Response.html('vendor');
-    });
-
-    Router.post("/vendor", () {
-      return Response.html('created vendor');
-    });
-
-    Router.put("/vendor/{vend_id}", () {
-      return Response.html('updated vendor');
-    });
-
-    Router.delete("/vendor/{vend_id}", () {
-      return Response.html('deleted vendor');
-    });
+    Router.get("/vendors", VendorController().getVendorController);
+    Router.post("/vendors/create", VendorController().createVendorController);
+    Router.put("/vendors/update/{vendID}", VendorController().updateVendorController);
+    Router.delete("/vendors/delete/{vendID}", VendorController().deleteVendorController);
   }
 }

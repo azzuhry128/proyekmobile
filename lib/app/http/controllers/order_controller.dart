@@ -11,13 +11,17 @@ class OrderController extends Controller {
 
   Future<Response> createOrderController(Request request) async {
     final orderDate = request.input('orderDate');
-    final custId = request.input('custId');
+    final custId = request.input('custID');
 
-    final randomID = (Random().nextInt(90000000000) + 10000000000).toString();
+    final randomID = (Random().nextInt(4000000000) + 1000000000).toString();
 
     final result = await Order().query().insert(
         {'order_num': randomID, 'order_date': orderDate, 'cust_id': custId});
-    return Response.json({'message': result});
+    return Response.json({
+      'message': "success adding order",
+      "orderID": randomID,
+      "data": result
+    });
   }
 
   Future<Response> updateOrderController(Request request, orderNum) async {
@@ -41,12 +45,21 @@ class OrderController extends Controller {
         .query()
         .where('order_num', '=', orderNum)
         .update(updateData);
-    return Response.json({'message': result});
+
+    return Response.json({
+      'message': "success updating order",
+      "orderID": orderNum,
+      "data": result
+    });
   }
 
   Future<Response> deleteOrderController(Request request, orderNum) async {
     final result =
         await Order().query().where('order_num', '=', orderNum).delete();
-    return Response.json({'message': result});
+    return Response.json({
+      'message': "success deleting order",
+      "orderID": orderNum,
+      "data": result
+    });
   }
 }

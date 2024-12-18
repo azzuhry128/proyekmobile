@@ -19,7 +19,7 @@ class CustomerController extends Controller {
 
     final randomID = (Random().nextInt(90000) + 10000).toString();
 
-    final result = Customer().query().insert({
+    Customer().query().insert({
       'cust_id': randomID,
       'cust_name': custName,
       'cust_address': custAddress,
@@ -30,11 +30,14 @@ class CustomerController extends Controller {
       'cust_telp': custTelp
     });
 
-    return Response.json({'message': await result});
+    return Response.json(
+        {'message': 'account creation success', "customer id": randomID});
   }
 
   Future<Response> updateCustomer(Request request, id) async {
     final Map<String, dynamic> updateData = {};
+
+    final custID = id.toString();
 
     final inputFields = [
       ['cust_name', request.input('custName')],
@@ -50,18 +53,24 @@ class CustomerController extends Controller {
       final fieldName = input[0];
       final fieldValue = input[1];
 
-      if (fieldValue != null ) {
+      if (fieldValue != null) {
         updateData[fieldName] = fieldValue;
       }
     }
 
     final result =
-        await Customer().query().where('cust_id', '=', id).update(updateData);
-    return Response.json({'message': result});
+        await Customer().query().where('cust_id', '=', custID).update(updateData);
+    return Response.json({
+      'message': "account update success",
+      "updated customer id": id,
+      "data": await result
+    });
   }
 
   Future<Response> deleteCustomer(Request request, id) async {
-    final result = await Customer().query().where('cust_id', '=', id).delete();
-    return Response.json({'message': result});
+    final custID = id.toString();
+    final result = await Customer().query().where('cust_id', '=', custID).delete();
+    return Response.json(
+        {'message': "account delete success", "deleted customer id": id, "data": result});
   }
 }
