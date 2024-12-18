@@ -62,7 +62,6 @@ class CustomerController extends Controller {
 
   Future<Response> deleteCustomer(Request request, id) async {
     final result = await Customer().query().where('cust_id', '=', id).delete();
-
     return Response.json({'message': result});
   }
 }

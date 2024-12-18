@@ -34,9 +34,7 @@ class ApiRoute implements Route {
 
     Router.put("/customer/update/{id}", CustomerController().updateCustomer);
 
-    Router.delete("/customers/{cust_id}", () {
-      return Response.html('deleted customers');
-    });
+    Router.delete("/customer/delete/{id}", CustomerController().deleteCustomer);
 
     // orders
     Router.get("/orders", () {
